@@ -8,12 +8,12 @@ import { cn } from "@/lib/utils";
 */
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 /**
  * Assets
 */
-import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import { Facebook } from "lucide-react";
 
 /**
  * Constants

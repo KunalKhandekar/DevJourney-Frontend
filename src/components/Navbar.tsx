@@ -1,7 +1,7 @@
 /**
  * Node modules
 */
-import { href, NavLink } from "react-router";
+import { NavLink } from "react-router";
 
 /**
  * Components

@@ -1,10 +1,10 @@
 /**
  * Node modules
  */
-import { useCallback, useEffect } from 'react';
-import { useFetcher } from 'react-router';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useFetcher } from 'react-router';
 import { z } from 'zod';
 
 /**
@@ -15,19 +15,16 @@ import { cn } from '@/lib/utils';
 /**
  * Components
  */
+import { InputPassword } from '@/components/InputPassword';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogTrigger,
+  DialogClose,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
+  DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
-import { Input } from '@/components/ui/input';
-import { InputPassword } from '@/components/InputPassword';
 import {
   Form,
   FormControl,
@@ -36,6 +33,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 /**
  * Custom hooks
@@ -50,8 +50,8 @@ import { AtSignIcon, Loader2Icon, MailIcon } from 'lucide-react';
 /**
  * Types
  */
-import type { DialogProps } from '@radix-ui/react-dialog';
 import type { ActionResponse } from '@/types';
+import type { DialogProps } from '@radix-ui/react-dialog';
 import { toast } from 'sonner';
 
 /**
