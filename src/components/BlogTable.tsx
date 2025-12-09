@@ -6,33 +6,16 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { useFetcher, Link } from 'react-router';
-import { motion } from 'motion/react';
 import { Editor } from '@tiptap/react';
-import { formatDistanceToNowStrict } from 'date-fns';
 import StarterKit from '@tiptap/starter-kit';
+import { formatDistanceToNowStrict } from 'date-fns';
+import { motion } from 'motion/react';
 import { useMemo } from 'react';
+import { Link, useFetcher } from 'react-router';
 
 /**
  * Component
  */
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,54 +27,48 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import Avatar from 'react-avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipTrigger,
 } from '@/components/ui/tooltip';
+import Avatar from 'react-avatar';
 
-const MotionTableBody = motion.create(TableBody);
 const MotionTableRow = motion.create(TableRow);
 
 /**
  * Assets
  */
-import { MoreHorizontalIcon, Loader2Icon } from 'lucide-react';
+import { Loader2Icon, MoreHorizontalIcon } from 'lucide-react';
 
 /**
  * Types
  */
-import type { ColumnDef } from '@tanstack/react-table';
-import type { Blog, User } from '@/types';
-import type { Variants } from 'motion/react';
 import { cn, getUsername } from '@/lib/utils';
+import type { Blog, User } from '@/types';
+import type { ColumnDef } from '@tanstack/react-table';
 
 interface BlogTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
-/**
- * Framer motion variants
- */
-const tableRowVariant: Variants = {
-  from: { opacity: 0 },
-  to: {
-    opacity: 1,
-    transition: {
-      duration: 0.05,
-    },
-  },
-};
-
-const tableBodyVariant: Variants = {
-  to: {
-    transition: {
-      staggerChildren: 0.01,
-    },
-  },
-};
 
 const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
   const fetcher = useFetcher();
@@ -153,10 +130,13 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                    const formData = new FormData();
-                    formData.append('status', isPublished ? 'draft' : 'published')
+                  const formData = new FormData();
+                  formData.append(
+                    'status',
+                    isPublished ? 'draft' : 'published',
+                  );
                   fetcher.submit(formData, {
-                    action: `/admin/blogs/${blog.slug}/edit`,
+                    action: `/admin/blogs/${blog._id}/edit`,
                     method: 'PUT',
                     encType: 'multipart/form-data',
                   });
@@ -173,7 +153,7 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <DropdownMenuItem
-            variant='destructive'
+              variant='destructive'
               onSelect={(e) => e.preventDefault()}
               disabled={isDeleting}
             >
@@ -184,12 +164,11 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
 
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>
-                Delete Blog Post?
-              </AlertDialogTitle>
+              <AlertDialogTitle>Delete Blog Post?</AlertDialogTitle>
 
               <AlertDialogDescription>
-                This action cannot be undone. Are you sure you want to delete this blog post permanently?
+                This action cannot be undone. Are you sure you want to delete
+                this blog post permanently?
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -197,7 +176,7 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                   const data = { blogId: blog._id };
+                  const data = { blogId: blog._id };
                   fetcher.submit(data, {
                     action: '/admin/blogs',
                     method: 'DELETE',
@@ -355,36 +334,30 @@ export const BlogTable = <TData, TValue>({
               <TableHead
                 key={header.id}
                 colSpan={header.colSpan}
-                className='bg-muted px-4 first:rounded-l-lg last:rounded-r-lg'
               >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext(),
+                )}
               </TableHead>
             ))}
           </TableRow>
         ))}
       </TableHeader>
 
-      <MotionTableBody
-        initial='from'
-        animate='to'
-        variants={tableBodyVariant}
-      >
+      <TableBody>
         {table.getRowModel().rows.length ? (
           table.getRowModel().rows.map((row) => (
             <MotionTableRow
               key={row.id}
-              data-state={row.getIsSelected() && 'selected'}
-              variants={tableRowVariant}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.08 }}
             >
               {row.getVisibleCells().map((cell) => (
                 <TableCell
                   key={cell.id}
-                  className='px-4 py-3 min-h-16 max-w-max'
+                  className='px-4 py-3'
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
@@ -401,7 +374,7 @@ export const BlogTable = <TData, TValue>({
             </TableCell>
           </TableRow>
         )}
-      </MotionTableBody>
+      </TableBody>
     </Table>
   );
 };

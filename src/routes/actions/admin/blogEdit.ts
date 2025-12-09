@@ -12,14 +12,14 @@ import type { ActionResponse } from '@/types';
 
 const blogEditAction: ActionFunction = async ({ request, params }) => {
   const formData = await request.formData();
-  const slug = params.slug;
+  const blogId = params.blogId;
 
   const accessToken = localStorage.getItem('accessToken');
 
   if(!accessToken) return redirect('/');
 
   try {
-    const response = await devJourneyAPI.put(`/blogs/${slug}`, formData, {
+    const response = await devJourneyAPI.put(`/blogs/${blogId}`, formData, {
         headers :{ 
             Authorization: `Bearer ${accessToken}`,
             'Content-Encoding': 'multipart/form-data', 

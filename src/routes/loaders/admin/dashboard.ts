@@ -31,6 +31,13 @@ const dashboardLoader: LoaderFunction = async () => {
       params: { limit: 5 },
     });
 
+    const usersResponse = await devJourneyAPI.get('/users', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { limit: 5 },
+    });
+
     const commentsResponse = await devJourneyAPI.get('/comments', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -38,12 +45,7 @@ const dashboardLoader: LoaderFunction = async () => {
       params: { limit: 5 },
     });
 
-    const usersResponse = await devJourneyAPI.get('/users', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      params: { limit: 5 },
-    });
+    
 
     const paginatedBlogs = blogsResponse.data as PaginatedResponse<Blog, 'blogs'>;
     const paginatedCommnets = commentsResponse.data as PaginatedResponse<Comment, 'comments'>;

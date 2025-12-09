@@ -48,9 +48,6 @@ export const AllBlogs = ({
   ...props
 }: React.ComponentProps<'section'>) => {
   const { allBlog } = useLoaderData<HomeLoaderResponse>();
-
-  console.log(allBlog);
-
   return (
     <section
       className={cn('section', className)}
