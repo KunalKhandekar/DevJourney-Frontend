@@ -2,6 +2,7 @@
  * Node modules
  */
 import { redirect } from 'react-router';
+import { toast } from 'sonner';
 
 /**
  * Custom modules
@@ -13,19 +14,26 @@ import { devJourneyAPI } from '@/api';
  */
 import type { ActionFunction } from 'react-router';
 import { AxiosError } from 'axios';
-import { toast } from 'sonner';
 
-const settingsAction: ActionFunction = async ({ request }) => {
+const commentsAction: ActionFunction = async ({ request }) => {
+  const url = new URL(request.url);
+  const blogId = url.searchParams.get('blogId');
   const data = await request.json();
   const accessToken = localStorage.getItem('accessToken');
-  if (!accessToken) return redirect('/');
+
+  if (!accessToken) {
+    toast.error('Login to make a comment');
+    return;
+  }
 
   try {
-    const response = await devJourneyAPI.put('/users/current', data);
+    const response = await devJourneyAPI.post(
+      `/comments/blog/${blogId}`,
+      data
+    );
 
     const responseData = response.data;
-    localStorage.setItem('user', JSON.stringify(responseData.user));
-
+    toast.success('Comment added successfully!');
     return {
       ok: true,
       data: responseData,
@@ -49,4 +57,4 @@ const settingsAction: ActionFunction = async ({ request }) => {
   }
 };
 
-export default settingsAction;
+export default commentsAction;

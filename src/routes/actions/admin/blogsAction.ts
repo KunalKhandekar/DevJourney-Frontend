@@ -18,12 +18,7 @@ const blogsAction: ActionFunction = async ({ request }) => {
   if(!accessToken) return redirect('/');
 
   try {
-    await devJourneyAPI.delete(`/blogs/${data.blogId}`, {
-        headers :{ 
-            Authorization: `Bearer ${accessToken}`,
-        }
-    });
-
+    await devJourneyAPI.delete(`/blogs/${data.blogId}`);
     return  { ok: true };
   } catch (error) {
     if (error instanceof AxiosError) {

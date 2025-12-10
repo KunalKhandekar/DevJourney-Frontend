@@ -13,9 +13,7 @@ import type { ActionResponse, AuthResponse } from '@/types';
 const signupAction: ActionFunction = async ({ request }) => {
   const data = await request.json();
   try {
-    const response = await devJourneyAPI.post('/auth/register', data, {
-      withCredentials: true,
-    });
+    const response = await devJourneyAPI.post('/auth/register', data);
 
     const responseData = response.data as AuthResponse;
     localStorage.setItem('accessToken', responseData.accessToken);

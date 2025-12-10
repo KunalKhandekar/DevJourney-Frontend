@@ -13,22 +13,20 @@ import type { ActionResponse, BlogCreateResponse } from '@/types';
 const blogCreateAction: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const accessToken = localStorage.getItem('accessToken');
-
-  if(!accessToken) return redirect('/');
+  if (!accessToken) return redirect('/');
 
   try {
     const response = await devJourneyAPI.post(`/blogs`, formData, {
-        headers :{ 
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Encoding': 'multipart/form-data', 
-        }
+      headers: {
+        'Content-Encoding': 'multipart/form-data',
+      },
     });
 
     const responseData = response.data as BlogCreateResponse;
 
-    return  {
-        ok: true,
-        data: responseData
+    return {
+      ok: true,
+      data: responseData,
     } as ActionResponse<BlogCreateResponse>;
   } catch (error) {
     if (error instanceof AxiosError) {

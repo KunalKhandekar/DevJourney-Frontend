@@ -251,7 +251,7 @@ export const columns: ColumnDef<Blog>[] = [
       return (
         <div className='flex items-center gap-2'>
           <Avatar
-            email={author.email}
+            name={author.username}
             size='24'
             className='rounded-md'
           />

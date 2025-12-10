@@ -22,9 +22,6 @@ const allUserLoader: LoaderFunction = async ({ request }) => {
   try {
     const { data } = await devJourneyAPI.get('/users', {
       params: Object.fromEntries(url.searchParams.entries()),
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
     });
 
     return data;

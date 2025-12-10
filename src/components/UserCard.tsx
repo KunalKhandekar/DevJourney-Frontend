@@ -68,8 +68,7 @@ export const UserCard = ({
       <CardContent className='grid grid-cols-[max-content_minmax(0,1fr)_max-content] gap-4 px-4'>
         <Avatar
           size='40'
-          email={email}
-          name={firstName || lastName ? [firstName, lastName].join(' ') : email}
+          name={username}
           className='rounded-lg'
         />
 

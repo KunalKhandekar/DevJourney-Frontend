@@ -22,9 +22,6 @@ const allCommentLoader: LoaderFunction = async ({ request }) => {
   try {
     const { data } = await devJourneyAPI.get('/comments', {
       params: Object.fromEntries(url.searchParams.entries()),
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
     });
 
     return data;

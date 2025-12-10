@@ -18,11 +18,7 @@ const adminLoader: LoaderFunction = async () => {
   const accessToken = localStorage.getItem('accessToken');
   if (!accessToken) return redirect('/');
   try {
-    const { data } = await devJourneyAPI.get('/users/current', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const { data } = await devJourneyAPI.get('/users/current');
     if (data.user.role !== 'admin') return redirect('/');
     return data;
   } catch (error) {

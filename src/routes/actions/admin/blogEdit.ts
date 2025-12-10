@@ -15,13 +15,11 @@ const blogEditAction: ActionFunction = async ({ request, params }) => {
   const blogId = params.blogId;
 
   const accessToken = localStorage.getItem('accessToken');
-
   if(!accessToken) return redirect('/');
 
   try {
     const response = await devJourneyAPI.put(`/blogs/${blogId}`, formData, {
         headers :{ 
-            Authorization: `Bearer ${accessToken}`,
             'Content-Encoding': 'multipart/form-data', 
         }
     });

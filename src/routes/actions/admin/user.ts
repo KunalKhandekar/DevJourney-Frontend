@@ -14,15 +14,10 @@ const allUserAction: ActionFunction = async ({ request }) => {
   const data = (await request.json()) as { userId: string };
 
   const accessToken = localStorage.getItem('accessToken');
-
   if (!accessToken) return redirect('/');
 
   try {
-    await devJourneyAPI.delete(`/users/${data.userId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    await devJourneyAPI.delete(`/users/${data.userId}`);
 
     return { ok: true };
   } catch (error) {

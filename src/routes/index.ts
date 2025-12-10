@@ -30,6 +30,7 @@ import blogEditAction from '@/routes/actions/admin/blogEdit';
 import blogsAction from '@/routes/actions/admin/blogsAction';
 import allUserAction from '@/routes/actions/admin/user';
 import blogCreateAction from '@/routes/actions/admin/blogCreate';
+import commentsAction from '@/routes/actions/comments';
 
 /**
  * Loaders
@@ -136,8 +137,11 @@ const router = createBrowserRouter([
   {
     path: '/settings',
     action: settingsAction,
-    
   },
+  {
+    path: '/comments',
+    action: commentsAction,
+  }
 ]);
 
 export default router;
