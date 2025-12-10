@@ -1,62 +1,61 @@
+"use client"
+
+import type React from "react"
+
 /**
  * Node modules
  */
-import { useCallback } from 'react';
-import { useCurrentEditor } from '@tiptap/react';
+import { useCurrentEditor } from "@tiptap/react"
+import { useCallback, useMemo } from "react"
+import { TooltipProvider } from "@/components/ui/tooltip" // Import TooltipProvider
 
 /**
  * Components
  */
-import { Separator } from '@/components/ui/separator';
-import { Toggle } from '@/components/ui/toggle';
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuLabel,
   DropdownMenuItem,
-} from '@/components/ui/dropdown-menu';
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Separator } from "@/components/ui/separator"
+import { Toggle } from "@/components/ui/toggle"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 
 /**
  * Assets
  */
 import {
   BoldIcon,
+  ChevronDownIcon,
   CodeIcon,
+  CodeSquareIcon,
   Heading1Icon,
+  Heading2Icon,
   Heading3Icon,
   HeadingIcon,
   ItalicIcon,
-  StrikethroughIcon,
-  Undo2Icon,
-  Redo2Icon,
-  TextQuoteIcon,
-  CodeSquareIcon,
-  ChevronDownIcon,
   ListIcon,
   ListOrderedIcon,
-  Heading2Icon,
-} from 'lucide-react';
+  Redo2Icon,
+  StrikethroughIcon,
+  TextQuoteIcon,
+  Undo2Icon,
+} from "lucide-react"
 
 /**
  * Types
  */
-import type { LucideProps } from 'lucide-react';
-type Level = 1 | 2 | 3;
+import type { LucideProps } from "lucide-react"
+type Level = 1 | 2 | 3
 interface HeadingType {
-  label: string;
-  Icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, 'ref'> & React.RefAttributes<SVGSVGElement>
-  >;
-  level: Level;
+  label: string
+  Icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>
+  level: Level
 }
 
 /**
@@ -64,129 +63,271 @@ interface HeadingType {
  */
 const HEADINGS: HeadingType[] = [
   {
-    label: 'Heading 1',
+    label: "Heading 1",
     Icon: Heading1Icon,
     level: 1,
   },
   {
-    label: 'Heading 2',
+    label: "Heading 2",
     Icon: Heading2Icon,
     level: 2,
   },
   {
-    label: 'Heading 3',
+    label: "Heading 3",
     Icon: Heading3Icon,
     level: 3,
   },
-];
+]
 
-export const Toolbar = ({
-  className,
-  ...props
-}: React.ComponentProps<'div'>) => {
-  const { editor } = useCurrentEditor();
+export const Toolbar = ({ className, ...props }: React.ComponentProps<"div">) => {
+  const { editor } = useCurrentEditor()
 
-  const getActiveIcon = useCallback(() => {
-    if (!editor) return <HeadingIcon />;
-    const activeHeading = HEADINGS.find(({ level }) =>
-      editor.isActive('heading', {
-        level,
-      }),
-    );
+  const activeHeadingIcon = useMemo(() => {
+    if (!editor) return <HeadingIcon />
+    const activeHeading = HEADINGS.find(({ level }) => editor.isActive("heading", { level }))
+    return activeHeading?.level ? <activeHeading.Icon /> : <HeadingIcon />
+  }, [editor, editor?.state.selection])
 
-    if (!activeHeading?.level) return <HeadingIcon />;
+  const isAnyHeadingActive = useMemo(() => editor?.isActive("heading") ?? false, [editor?.state.selection])
 
-    return <activeHeading.Icon />;
-  }, [editor]);
+  const handleUndo = useCallback(() => editor?.commands.undo(), [editor])
 
-  if (!editor) return null;
+  const handleRedo = useCallback(() => editor?.commands.redo(), [editor])
 
-  const isAnyHeadingActive = editor.isActive('heading');
+  const handleBulletList = useCallback(() => editor?.chain().focus().toggleBulletList().run(), [editor])
+
+  const handleOrderedList = useCallback(() => editor?.chain().focus().toggleOrderedList().run(), [editor])
+
+  const handleBlockquote = useCallback(() => editor?.chain().focus().toggleBlockquote().run(), [editor])
+
+  const handleCodeBlock = useCallback(() => editor?.chain().focus().toggleCodeBlock().run(), [editor])
+
+  const handleBold = useCallback(() => editor?.chain().focus().toggleBold().run(), [editor])
+
+  const handleItalic = useCallback(() => editor?.chain().focus().toggleItalic().run(), [editor])
+
+  const handleStrike = useCallback(() => editor?.chain().focus().toggleStrike().run(), [editor])
+
+  const handleCode = useCallback(() => editor?.chain().focus().toggleCode().run(), [editor])
+
+  if (!editor) return null
 
   return (
-    <div
-      className={cn('flex items-center gap-1 p-2', className)}
-      {...props}
-    >
-      <Tooltip>
-        <TooltipTrigger>
-          <Button
-            variant='ghost'
-            size='icon'
-            onClick={() => editor.commands.undo()}
-            disabled={editor.can().undo()}
-          >
-            <Undo2Icon />
-          </Button>
-        </TooltipTrigger>
-
-        <TooltipContent
-          side='bottom'
-          className='text-center'
-        >
-          Undo
-          <div className='opacity-70'>Ctrl+Z</div>
-        </TooltipContent>
-      </Tooltip>
-
-      <Tooltip>
-        <TooltipTrigger>
-          <Button
-            variant='ghost'
-            size='icon'
-            onClick={() => editor.commands.redo()}
-            disabled={editor.can().redo()}
-          >
-            <Redo2Icon />
-          </Button>
-        </TooltipTrigger>
-
-        <TooltipContent
-          side='bottom'
-          className='text-center'
-        >
-          Redo
-          <div className='opacity-70'>Ctrl+Shift+Z</div>
-        </TooltipContent>
-      </Tooltip>
-
-      <Separator
-        orientation='vertical'
-        className='data-[orientation=vertical]:h-4'
-      />
-
-      <DropdownMenu>
+    <TooltipProvider>
+      {" "}
+      {/* Wrap the Toolbar content in TooltipProvider */}
+      <div className={cn("flex items-center gap-1 p-2", className)} {...props}>
         <Tooltip>
           <TooltipTrigger asChild>
-            <DropdownMenuTrigger asChild>
-              <Button
-                className='px-2! gap-0'
-                variant={isAnyHeadingActive ? 'secondary' : 'ghost'}
-              >
-                {getActiveIcon()}
-                <ChevronDownIcon className='text-muted-foreground' />
-              </Button>
-            </DropdownMenuTrigger>
+            <Button variant="ghost" size="icon" onClick={handleUndo} disabled={!editor.can().undo()}>
+              <Undo2Icon />
+            </Button>
           </TooltipTrigger>
 
-          <TooltipContent side='bottom'>Heading</TooltipContent>
+          <TooltipContent side="bottom" className="text-center">
+            Undo
+            <div className="opacity-70">Ctrl+Z</div>
+          </TooltipContent>
         </Tooltip>
 
-        <DropdownMenuContent
-          align='start'
-          onCloseAutoFocus={(event) => event.preventDefault()}
-        >
-          <DropdownMenuGroup>
-            <DropdownMenuLabel className='text-muted-foreground'>
-              Heading
-            </DropdownMenuLabel>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="icon" onClick={handleRedo} disabled={!editor.can().redo()}>
+              <Redo2Icon />
+            </Button>
+          </TooltipTrigger>
 
-            {HEADINGS.map(({label, Icon, level}) => (
-                <DropdownMenuItem key={`heading-${level}`} onClick={() => editor.chain().focus().toggleHeading({level}).run()} disabled={!editor.can().toggleHeading({level})}><Icon /> {label}</DropdownMenuItem>
-            ))}
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-};
+          <TooltipContent side="bottom" className="text-center">
+            Redo
+            <div className="opacity-70">Ctrl+Shift+Z</div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Separator orientation="vertical" className="data-[orientation=vertical]:h-4" />
+
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button className="px-2! gap-0" variant={isAnyHeadingActive ? "secondary" : "ghost"}>
+                  {activeHeadingIcon}
+                  <ChevronDownIcon className="text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+
+            <TooltipContent side="bottom">Heading</TooltipContent>
+          </Tooltip>
+
+          <DropdownMenuContent align="start" onCloseAutoFocus={(event) => event.preventDefault()}>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel className="text-muted-foreground">Heading</DropdownMenuLabel>
+
+              {HEADINGS.map(({ label, Icon, level }) => (
+                <DropdownMenuItem
+                  key={`heading-${level}`}
+                  onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
+                  disabled={!editor.can().toggleHeading({ level })}
+                >
+                  <Icon /> {label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle bullet list"
+              onClick={handleBulletList}
+              disabled={!editor.can().toggleBulletList()}
+              pressed={editor.isActive("bulletList")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <ListIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Bullet List
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle ordered list"
+              onClick={handleOrderedList}
+              disabled={!editor.can().toggleOrderedList()}
+              pressed={editor.isActive("orderedList")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <ListOrderedIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Ordered List
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle Blockquote"
+              onClick={handleBlockquote}
+              disabled={!editor.can().toggleBlockquote()}
+              pressed={editor.isActive("blockquote")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <TextQuoteIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Blockquote
+            <div className="opacity-70">Ctrl+Shift+B</div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle code block"
+              onClick={handleCodeBlock}
+              disabled={!editor.can().toggleCodeBlock()}
+              pressed={editor.isActive("codeBlock")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <CodeSquareIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Code Block
+            <div className="opacity-70">Ctrl+Alt+C</div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Separator orientation="vertical" className="data-[orientation=vertical]:h-4" />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle bold"
+              onClick={handleBold}
+              disabled={!editor.can().toggleBold()}
+              pressed={editor.isActive("bold")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <BoldIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Bold
+            <div className="opacity-70">Ctrl+B</div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle italic"
+              onClick={handleItalic}
+              disabled={!editor.can().toggleItalic()}
+              pressed={editor.isActive("italic")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <ItalicIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Italic
+            <div className="opacity-70">Ctrl+I</div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle strikethrough"
+              onClick={handleStrike}
+              disabled={!editor.can().toggleStrike()}
+              pressed={editor.isActive("strike")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <StrikethroughIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Strike
+            <div className="opacity-70">Ctrl+Shift+S</div>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Toggle
+              aria-label="Toggle code"
+              onClick={handleCode}
+              disabled={!editor.can().toggleCode()}
+              pressed={editor.isActive("code")}
+              className="aria-pressed:bg-secondary aria-pressed:text-secondary-foreground"
+            >
+              <CodeIcon />
+            </Toggle>
+          </TooltipTrigger>
+
+          <TooltipContent side="bottom" className="text-center">
+            Code
+            <div className="opacity-70">Ctrl+E</div>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  )
+}

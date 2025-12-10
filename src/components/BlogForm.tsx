@@ -1,17 +1,20 @@
+'use client';
+
+import type React from 'react';
+
 /**
  * Node modules
  */
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 /**
  * Components
  */
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import TipTap from '@/components/TipTap';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 /**
  * Assets
@@ -23,7 +26,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
  * Types
  */
 type BlogFormData = {
-  banner_image?: Blob;
+  banner_image?: Blob | string | File;
   title: string;
   content: string;
 };
@@ -47,17 +50,89 @@ export const BlogForm: React.FC<BlogFormProps> = ({
   const [data, setData] = useState<BlogFormData>({
     title: defaultValue?.title || '',
     content: defaultValue?.content || '',
+    banner_image: defaultValue?.bannerUrl || '',
   });
 
   const [bannerPreviewURL, setBannerPreviewURL] = useState<string | undefined>(
     defaultValue?.bannerUrl,
   );
 
-  const status = defaultValue?.status;
+  const status = defaultValue?.status || 'draft';
   const hasBanner = useMemo(
     () => Boolean(bannerPreviewURL),
     [bannerPreviewURL],
   );
+
+  useEffect(() => {
+    return () => {
+      if (bannerPreviewURL && !bannerPreviewURL.startsWith('http')) {
+        URL.revokeObjectURL(bannerPreviewURL);
+      }
+    };
+  }, [bannerPreviewURL]);
+
+  const handleBannerChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.files) return;
+      const file = event.target.files[0];
+
+      setData((prev) => ({
+        ...prev,
+        banner_image: file,
+      }));
+
+      if (bannerPreviewURL && !bannerPreviewURL.startsWith('http')) {
+        URL.revokeObjectURL(bannerPreviewURL);
+      }
+
+      setBannerPreviewURL(URL.createObjectURL(file));
+    },
+    [bannerPreviewURL],
+  );
+
+  const handleTitleChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setData((prev) => ({ ...prev, title: event.target.value }));
+    },
+    [],
+  );
+
+  const handleContentUpdate = useCallback(({ editor }: any) => {
+    setData((prev) => ({ ...prev, content: editor.getHTML() }));
+  }, []);
+
+  const handleRemoveBanner = useCallback(() => {
+    if (bannerPreviewURL && !bannerPreviewURL.startsWith('http')) {
+      URL.revokeObjectURL(bannerPreviewURL);
+    }
+    setData((prev) => ({
+      ...prev,
+      banner_image: undefined,
+    }));
+    setBannerPreviewURL(undefined);
+  }, [bannerPreviewURL]);
+
+  const handleSaveDraft = useCallback(() => {
+    onSubmit(
+      {
+        content: data.content,
+        title: data.title,
+        banner_image: data.banner_image,
+      },
+      'draft',
+    );
+  }, [data, onSubmit]);
+
+  const handlePublish = useCallback(() => {
+    onSubmit(
+      {
+        content: data.content,
+        title: data.title,
+        banner_image: data.banner_image,
+      },
+      'published',
+    );
+  }, [data, onSubmit]);
 
   return (
     <div className='relative space-y-5'>
@@ -78,16 +153,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
                     accept='.jpg, .jpeg, .png, .webp'
                     name='banner_image'
                     className='sr-only'
-                    onChange={(event) => {
-                      if (!event.target.files) return;
-                      setData((prev) => ({
-                        ...prev,
-                        banner_image: event.target.files?.[0],
-                      }));
-                      setBannerPreviewURL(
-                        URL.createObjectURL(event.target.files?.[0]),
-                      );
-                    }}
+                    onChange={handleBannerChange}
                   />
                 </Label>
               </Button>
@@ -105,39 +171,21 @@ export const BlogForm: React.FC<BlogFormProps> = ({
             size='icon'
             className='absolute top-2 left-2 z-30'
             aria-label='Remove banner image'
-            onClick={() => {
-              setData((prev) => ({
-                ...prev,
-                banner_image: undefined,
-              }));
-              setBannerPreviewURL(undefined);
-            }}
+            onClick={handleRemoveBanner}
           >
             <XIcon />
           </Button>
         )}
 
-        <AnimatePresence>
-          {hasBanner && (
-            <motion.figure
-              className='rounded-xl overflow-hidden border'
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 240 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{
-                type: 'spring',
-                visualDuration: 0.25,
-                bounce: 0.2,
-              }}
-            >
-              <img
-                src={bannerPreviewURL}
-                alt={data.title}
-                className='w-full h-full object-cover'
-              />
-            </motion.figure>
-          )}
-        </AnimatePresence>
+        {hasBanner && (
+          <figure className='rounded-xl overflow-hidden border h-60'>
+            <img
+              src={bannerPreviewURL || '/placeholder.svg'}
+              alt={data.title}
+              className='w-full h-full object-cover'
+            />
+          </figure>
+        )}
       </div>
 
       <Textarea
@@ -145,19 +193,28 @@ export const BlogForm: React.FC<BlogFormProps> = ({
         maxLength={180}
         className='text-4xl! font-semibold tracking-tight border-none ring-0! bg-transparent! px-0 resize-none shadow-none '
         placeholder='New post title here...'
-        onChange={(event) =>
-          setData((prev) => ({ ...prev, title: event.target.value }))
-        }
+        onChange={handleTitleChange}
         value={data.title}
       />
 
       <div className='relative border inset-ring-border rounded-xl'>
         <TipTap
-          onUpate={({ editor }) =>
-            setData((prev) => ({ ...prev, content: editor.getHTMl() }))
-          }
+          onUpdate={handleContentUpdate}
           content={data.content}
         />
+      </div>
+
+      <div className='flex justify-end items-center gap-2 sticky bottom-0 py-4 bg-background isolate after:absolute after:bottom-full after:w-full after:h-10 after:bg-gradient-to-t after:from-background after:to-transparent after:pointer-events-none'>
+        <Button
+          variant='outline'
+          onClick={handleSaveDraft}
+        >
+          Save as draft
+        </Button>
+
+        <Button onClick={handlePublish}>
+          {status === 'draft' ? 'Publish' : 'Save changes'}
+        </Button>
       </div>
     </div>
   );

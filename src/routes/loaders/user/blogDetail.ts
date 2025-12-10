@@ -25,8 +25,6 @@ const blogDetail: LoaderFunction = async ({ params }) => {
 
   try {
     const { data } = await devJourneyAPI.get(`/blogs/${slug}`)
-
-
     return data;
   } catch (error) {
     if (error instanceof AxiosError) {

@@ -104,7 +104,7 @@ export interface ActionResponse<T = unknown> {
 
 export interface AuthResponse {
   accessToken: string;
-  user: Pick<User, 'username' | 'email' | 'role'>;
+  user: Pick<User, 'username' | 'email' | 'role' | 'firstName' | 'lastName'>;
 }
 
 export interface BlogCreateResponse {

@@ -18,6 +18,7 @@ import { Blogs as AdminBlogs } from '@/pages/admin/Blogs';
 import { Comments } from '@/pages/admin/Comments';
 import { Users } from '@/pages/admin/Users';
 import { BlogCreate } from '@/pages/admin/BlogCreate';
+import { BlogEdit } from '@/pages/admin/BlogEdit';
 
 /**
  * Actions
@@ -28,6 +29,7 @@ import settingsAction from '@/routes/actions/settings';
 import blogEditAction from '@/routes/actions/admin/blogEdit';
 import blogsAction from '@/routes/actions/admin/blogsAction';
 import allUserAction from '@/routes/actions/admin/user';
+import blogCreateAction from '@/routes/actions/admin/blogCreate';
 
 /**
  * Loaders
@@ -106,10 +108,13 @@ const router = createBrowserRouter([
       {
         path: 'blogs/create',
         Component: BlogCreate,
+        action: blogCreateAction,
         handle: { breadcumb: 'Create a new blog' },
       },
       {
-        path: 'blogs/:blogId/edit',
+        path: 'blogs/:slug/edit/:blogId',
+        Component: BlogEdit,
+        loader: blogDetailLoader,
         action: blogEditAction,
         handle: { breadcumb: 'Edit blog' },
       },

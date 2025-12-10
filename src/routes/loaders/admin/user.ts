@@ -27,8 +27,6 @@ const allUserLoader: LoaderFunction = async ({ request }) => {
       }
     });
 
-    console.log(data)
-
     return data;
   } catch (error) {
     if (error instanceof AxiosError) {

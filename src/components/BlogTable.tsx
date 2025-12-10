@@ -10,7 +10,7 @@ import { Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { formatDistanceToNowStrict } from 'date-fns';
 import { motion } from 'motion/react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useFetcher } from 'react-router';
 
 /**
@@ -72,13 +72,18 @@ interface BlogTableProps<TData, TValue> {
 
 const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
   const fetcher = useFetcher();
+  const [open, setOpen] = useState<true | false>(false);
+
   const isPublished = useMemo(() => blog.status === 'published', [blog.status]);
   const isChanging = fetcher.state !== 'idle';
   const isUpdating = isChanging && fetcher.formMethod === 'PUT';
   const isDeleting = isChanging && fetcher.formMethod === 'DELETE';
 
   return (
-    <DropdownMenu>
+    <DropdownMenu
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DropdownMenuTrigger asChild>
         <Button
           variant='ghost'
@@ -95,8 +100,9 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
       >
         <DropdownMenuItem asChild>
           <Link
-            to={`/admin/blogs/${blog.slug}/edit`}
+            to={`/admin/blogs/${blog.slug}/edit/${blog._id}`}
             viewTransition
+            onClick={() => setOpen(false)}
           >
             Edit
           </Link>
@@ -118,10 +124,9 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
               <AlertDialogTitle>
                 {isPublished ? 'Unpublish Blog Post?' : 'Publish Blog Post?'}
               </AlertDialogTitle>
-
               <AlertDialogDescription>
                 {isPublished
-                  ? 'This blog post will no longer be visible to readers. You can publish it again anytime. Are you sure? you want to unpublish it?'
+                  ? 'This blog post will no longer be visible to readers. You can publish it again anytime. Are you sure?'
                   : 'Once published, this blog post will be visible to everyone. Are you sure you want to publish it now?'}
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -129,17 +134,19 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => {
+                onClick={async () => {
                   const formData = new FormData();
                   formData.append(
                     'status',
                     isPublished ? 'draft' : 'published',
                   );
-                  fetcher.submit(formData, {
-                    action: `/admin/blogs/${blog._id}/edit`,
+                  await fetcher.submit(formData, {
+                    action: `/admin/blogs/${blog.slug}/edit/${blog._id}`,
                     method: 'PUT',
                     encType: 'multipart/form-data',
                   });
+
+                  setOpen(false);
                 }}
               >
                 {isPublished ? 'Unpublish' : 'Publish'}
@@ -165,7 +172,6 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Delete Blog Post?</AlertDialogTitle>
-
               <AlertDialogDescription>
                 This action cannot be undone. Are you sure you want to delete
                 this blog post permanently?
@@ -175,13 +181,14 @@ const BlogActionDropdown = ({ blog }: { blog: Blog }) => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-                onClick={() => {
+                onClick={async () => {
                   const data = { blogId: blog._id };
-                  fetcher.submit(data, {
+                  await fetcher.submit(data, {
                     action: '/admin/blogs',
                     method: 'DELETE',
                     encType: 'application/json',
                   });
+                  setOpen(false);
                 }}
               >
                 Delete

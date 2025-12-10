@@ -174,7 +174,7 @@ export const Dashboard = () => {
             </CardAction>
           </CardHeader>
 
-          <CardContent className='px-4'>
+          <CardContent className='px-4 space-y-2'>
             {loaderData.users.map(
               (
                 { _id, username, email, role,firstName, lastName, createdAt },

@@ -18,12 +18,9 @@ const refreshTokenLoader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const redirectUri = url.searchParams.get('redirect') ?? '/';
   try {
-    const { data } = await devJourneyAPI.post(
-      '/auth/refresh-token',
-      {},
-      { withCredentials: true },
-    );
-
+    const { data } = await devJourneyAPI.post('/auth/refresh-token', {}, {
+      withCredentials: true
+    });
     localStorage.setItem('accessToken', data.accessToken);
 
     return redirect(redirectUri);

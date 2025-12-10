@@ -13,6 +13,7 @@ import { devJourneyAPI } from '@/api';
  */
 import type { ActionFunction } from 'react-router';
 import { AxiosError } from 'axios';
+import { toast } from 'sonner';
 
 const settingsAction: ActionFunction = async ({ request }) => {
   const data = await request.json();
@@ -21,9 +22,9 @@ const settingsAction: ActionFunction = async ({ request }) => {
 
   try {
     const response = await devJourneyAPI.put('/users/current', data, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`
-        },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
       withCredentials: true,
     });
 
@@ -36,6 +37,15 @@ const settingsAction: ActionFunction = async ({ request }) => {
     };
   } catch (error) {
     if (error instanceof AxiosError) {
+      if (error.response?.data?.errors) {
+        const errors = error.response.data.errors as Record<
+          string,
+          { msg: string }
+        >;
+        Object.values(errors).forEach((err) => {
+          toast.error(err.msg);
+        });
+      }
       return {
         ok: false,
         err: error.response?.data,

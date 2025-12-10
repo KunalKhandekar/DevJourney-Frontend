@@ -79,8 +79,8 @@ const ProfileSettingsForm = () => {
   }, [data]);
 
   const defaultValues = {
-    firstName: '',
-    lastName: '',
+    firstName: user?.firstName,
+    lastName: user?.lastName,
     email: user?.email,
     username: user?.username,
   };
@@ -134,7 +134,7 @@ const ProfileSettingsForm = () => {
                 <FormItem>
                   <FormLabel className='md:sr-only'>First name</FormLabel>
 
-                  <FormControl>
+                  <FormControl defaultValue={user?.firstName}>
                     <Input
                       type='text'
                       placeholder='John'
@@ -153,7 +153,7 @@ const ProfileSettingsForm = () => {
                 <FormItem>
                   <FormLabel className='md:sr-only'>Last name</FormLabel>
 
-                  <FormControl>
+                  <FormControl defaultValue={user?.lastName}>
                     <Input
                       type='text'
                       placeholder='Doe'
