@@ -78,6 +78,30 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           size === 'sm' && 'content-center order-1 ps-4 py-3',
         )}
       >
+
+       <Link
+          to={`/blogs/${slug}`}
+          viewTransition
+        >
+          <CardTitle
+            className={cn(
+              'underline-offset-4 hover:underline leading-tight line-clamp-2' ,
+              size === 'default' && 'text-lg @md:text-xl',
+            )}
+          >
+            {title}
+          </CardTitle>
+        </Link>
+
+        <CardDescription
+          className={cn(
+            'line-clamp-2 text-balance',
+            size === 'sm' && '@max-2xs:hidden',
+          )}
+        >
+          {editor.getText()}
+        </CardDescription>
+
         <div className='flex items-center gap-2 text-muted-foreground text-sm font-medium'>
           <p className='@max-xs:hidden'>{authorName}</p>
 
@@ -95,29 +119,6 @@ export const BlogCard: React.FC<BlogCardProps> = ({
             </TooltipContent>
           </Tooltip>
         </div>
-
-        <Link
-          to={`/blogs/${slug}`}
-          viewTransition
-        >
-          <CardTitle
-            className={cn(
-              'underline-offset-4 hover:underline leading-tight line-clamp-2',
-              size === 'default' && 'text-xl @md:text-2xl',
-            )}
-          >
-            {title}
-          </CardTitle>
-        </Link>
-
-        <CardDescription
-          className={cn(
-            'line-clamp-2 text-balance',
-            size === 'sm' && '@max-2xs:hidden',
-          )}
-        >
-          {editor.getText()}
-        </CardDescription>
       </CardHeader>
 
       <CardContent className='px-2'>
@@ -126,7 +127,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
           viewTransition
         >
           <AspectRatio
-            ratio={21 / 9}
+            ratio={21/9}
             className='rounded-lg overflow-hidden'
           >
             <img

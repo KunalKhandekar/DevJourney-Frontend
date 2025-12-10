@@ -1,18 +1,13 @@
 /**
  * Node modules
  */
-import { Link } from 'react-router';
 import { motion } from 'motion/react';
+import { Link } from 'react-router';
 
 /**
  * Components
  */
 const MotionLink = motion.create(Link);
-
-/**
- * Assets
- */
-// LogoIconLight and Darkmode
 
 export const Logo = () => {
   return (
@@ -23,20 +18,7 @@ export const Logo = () => {
       whileTap={{ scale: 0.9 }}
       viewTransition
     >
-      <img
-        src={'logoDark'}
-        alt='logo'
-        width={115}
-        height={32}
-        className='dark:hidden '
-      />
-      <img
-        src={'logoLight'}
-        alt='logo'
-        width={115}
-        height={32}
-        className='hidden dark:block'
-      />
+      <h1 className='text-xl md:text-2xl italic'>DevJourney</h1>
     </MotionLink>
   );
 };

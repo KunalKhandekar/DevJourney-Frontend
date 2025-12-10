@@ -132,7 +132,7 @@ export const BlogDetail = () => {
           <ArrowLeftIcon />
         </Button>
 
-        <h1 className='text-4xl leading-tight font-semibold -mt-10'>
+        <h1 className='text-2xl md:text-4xl leading-tight font-semibold -mt-10'>
           {blog.title}
         </h1>
         <div className='flex items-center gap-3 my-8'>
@@ -186,7 +186,7 @@ export const BlogDetail = () => {
         <Separator />
 
         <div className='my-8'>
-            <AspectRatio ratio={21/9} className='overflow-hidden rounded-xl bg-border'
+            <AspectRatio ratio={1/1} className='overflow-hidden rounded-xl bg-border'
             >
                 <img src={blog.banner.url} width={blog.banner.width}
                  height={blog.banner.height} alt={`Banner of blog: ${blog.title}`}

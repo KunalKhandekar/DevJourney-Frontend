@@ -26,7 +26,7 @@ export const RootErrorBoundary = () => {
       return <Navigate to={`/refresh-token?redirect=${location.pathname}`} />;
     }
     return (
-      <div className='h-dvd grid place-content-center place-items-center gap-4'>
+      <div className='h-dvh grid place-content-center place-items-center gap-4'>
         <h1 className='text-4xl font-semibold'>
           {error.status} {error.statusText}
         </h1>

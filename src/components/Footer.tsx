@@ -13,31 +13,31 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 /**
  * Assets
 */
-import { Facebook } from "lucide-react";
+import { Facebook, GithubIcon, GlobeLockIcon, LinkedinIcon, XIcon } from "lucide-react";
 
 /**
  * Constants
 */
 const SOCIAL_LINKS = [
     {
-        href: '',
-        Icon: Facebook,
-        label: 'Facebook Page',
+        href: 'https://x.com/_kunalkhandekar',
+        Icon: XIcon,
+        label: 'X (Twitter)',
     },
     {
-        href: '',
-        Icon: Facebook,
-        label: 'Facebook Page',
+        href: 'https://github.com/KunalKhandekar',
+        Icon: GithubIcon,
+        label: 'GitHub',
     },
     {
-        href: '',
-        Icon: Facebook,
-        label: 'Facebook Page',
+        href: 'https://www.linkedin.com/in/khandekarsahil/',
+        Icon: LinkedinIcon,
+        label: 'LinkedIn',
     },
     {
-        href: '',
-        Icon: Facebook,
-        label: 'Facebook Page',
+        href: 'https://sahilkhandekar.dev/',
+        Icon: GlobeLockIcon,
+        label: 'Portfolio',
     },
 ] as const;
 
@@ -68,8 +68,6 @@ export const Footer = ({ className, ...props }: React.ComponentProps<'footer'>) 
                 })}
             </ul>
             </div>
-
-            
         </footer>
     )
 }

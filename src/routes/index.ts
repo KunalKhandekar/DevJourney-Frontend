@@ -22,7 +22,7 @@ import { BlogEdit } from '@/pages/admin/BlogEdit';
 
 /**
  * Actions
-*/
+ */
 import signupAction from '@/routes/actions/auth/signup';
 import loginAction from '@/routes/actions/auth/login';
 import settingsAction from '@/routes/actions/settings';
@@ -136,6 +136,7 @@ const router = createBrowserRouter([
   {
     path: '/settings',
     action: settingsAction,
+    
   },
 ]);
 

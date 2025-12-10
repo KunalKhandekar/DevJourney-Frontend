@@ -37,15 +37,54 @@ const settingsAction: ActionFunction = async ({ request }) => {
     };
   } catch (error) {
     if (error instanceof AxiosError) {
+      // Check if expired access token
+      if (error.response?.status === 401) {
+        try {
+          const refreshResponse = await devJourneyAPI.post(
+            '/auth/refresh-token',
+            null,
+            {
+              withCredentials: true,
+            },
+          );
+
+          const newAccessToken = refreshResponse.data?.accessToken;
+          if (!newAccessToken) return redirect('/');
+
+          localStorage.setItem('accessToken', newAccessToken);
+
+          // Retry original request with new token
+          const retryResponse = await devJourneyAPI.put(
+            '/users/current',
+            data,
+            {
+              headers: {
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+              withCredentials: true,
+            },
+          );
+
+          const updatedData = retryResponse.data;
+          localStorage.setItem('user', JSON.stringify(updatedData.user));
+
+          return {
+            ok: true,
+            data: updatedData,
+          };
+        } catch {
+          return redirect('/');
+        }
+      }
+
       if (error.response?.data?.errors) {
         const errors = error.response.data.errors as Record<
           string,
           { msg: string }
         >;
-        Object.values(errors).forEach((err) => {
-          toast.error(err.msg);
-        });
+        Object.values(errors).forEach((err) => toast.error(err.msg));
       }
+
       return {
         ok: false,
         err: error.response?.data,

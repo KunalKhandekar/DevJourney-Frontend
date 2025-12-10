@@ -12,28 +12,55 @@ const useLogout = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  return async () => {
-    const accessToken = localStorage.getItem('accessToken');
-    const response = await devJourneyAPI.post(
-      '/auth/logout',
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        withCredentials: true,
-      },
-    );
-    if (response.status >= 400) return;
+  const clearAuthAndRedirect = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
-
     if (location.pathname === '/') {
       window.location.reload();
-      return;
+    } else {
+      navigate('/', { replace: true, viewTransition: true });
     }
+  };
 
-    navigate('/', { viewTransition: true });
+  return async () => {
+    const tryLogout = async () => {
+      const accessToken = localStorage.getItem('accessToken');
+      return devJourneyAPI.post(
+        '/auth/logout',
+        {},
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          withCredentials: true,
+        },
+      );
+    };
+
+    try {
+      await tryLogout();
+      clearAuthAndRedirect();
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        try {
+          const refreshResponse = await devJourneyAPI.post(
+            '/auth/refresh-token',
+            null,
+            {
+              withCredentials: true,
+            },
+          );
+          const newToken = refreshResponse.data?.accessToken;
+          if (newToken) localStorage.setItem('accessToken', newToken);
+
+          // retry logout
+          await tryLogout();
+          clearAuthAndRedirect();
+        } catch {
+          clearAuthAndRedirect();
+        }
+      } else {
+        clearAuthAndRedirect();
+      }
+    }
   };
 };
 

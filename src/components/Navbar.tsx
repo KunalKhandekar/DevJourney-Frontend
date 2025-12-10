@@ -20,14 +20,6 @@ const NAV_LINKS = [
         href: '/blogs',
         label: 'Blog'
     },
-    {
-        href: '/about',
-        label: 'About'
-    },
-    {
-        href: '/contact',
-        label: 'Contact'
-    },
 ] as const;
 
 export const Navbar = ({ className, ...props }: React.ComponentProps<'nav'>) => {

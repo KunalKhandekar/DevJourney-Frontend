@@ -23,8 +23,8 @@ import type { Variants } from 'motion/react';
  * Constants
  */
 const HERO = {
-  headline: 'Inside Design: Stories and interviews',
-  text: 'Subscribe to learn about new product features, the latest in technology, and updates.',
+  headline: 'Notes from a Developer',
+  text: 'Short lessons, practical examples, and personal experiences from my tech path.',
 } as const;
 
 /**
@@ -70,7 +70,7 @@ export const Hero = ({
         variants={containerVariant}
       >
         <motion.h1
-          className='text-3xl font-semibold text-balance text-center md:text-4xl lx:text-5xl'
+          className='text-2xl font-semibold text-balance text-center md:text-4xl lx:text-5xl'
           variants={childVariant}
         >
           {HERO.headline}

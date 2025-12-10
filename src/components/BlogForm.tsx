@@ -191,7 +191,7 @@ export const BlogForm: React.FC<BlogFormProps> = ({
       <Textarea
         name='title'
         maxLength={180}
-        className='text-4xl! font-semibold tracking-tight border-none ring-0! bg-transparent! px-0 resize-none shadow-none '
+        className='text-4xl!  font-semibold tracking-tight border-none ring-0! bg-transparent! px-0 resize-none shadow-none '
         placeholder='New post title here...'
         onChange={handleTitleChange}
         value={data.title}
