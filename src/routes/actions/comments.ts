@@ -1,7 +1,6 @@
 /**
  * Node modules
  */
-import { redirect } from 'react-router';
 import { toast } from 'sonner';
 
 /**
@@ -12,8 +11,8 @@ import { devJourneyAPI } from '@/api';
 /**
  * Types
  */
-import type { ActionFunction } from 'react-router';
 import { AxiosError } from 'axios';
+import type { ActionFunction } from 'react-router';
 
 const commentsAction: ActionFunction = async ({ request }) => {
   const url = new URL(request.url);

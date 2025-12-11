@@ -14,11 +14,6 @@ import { cn } from '@/lib/utils';
  */
 import { Button } from '@/components/ui/button';
 
-/**
- * Types
- */
-import type { Variants } from 'motion/react';
-
 
 export const AllBlogs = ({
   className,

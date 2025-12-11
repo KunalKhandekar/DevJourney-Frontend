@@ -372,8 +372,7 @@ const PasswordSettingsForm = () => {
 };
 
 export const SettingsDialog = ({
-  children,
-  ...props
+  children
 }: React.PropsWithChildren<DialogProps>) => {
   return (
     <Dialog>

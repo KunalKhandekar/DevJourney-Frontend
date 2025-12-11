@@ -13,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 /**
  * Assets
 */
-import { Facebook, GithubIcon, GlobeLockIcon, LinkedinIcon, XIcon } from "lucide-react";
+import { GithubIcon, GlobeLockIcon, LinkedinIcon, XIcon } from "lucide-react";
 
 /**
  * Constants

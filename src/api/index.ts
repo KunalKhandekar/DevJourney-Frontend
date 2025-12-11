@@ -12,7 +12,7 @@ import type { AxiosError } from "axios"
  * Create axios instance with base configuration
  */
 export const devJourneyAPI = axios.create({
-  baseURL: "http://localhost:3000/api/v1",
+  baseURL: "https://api.devjourney.sahilkhandekar.dev/api/v1",
   withCredentials: true,
 })
 
@@ -32,7 +32,7 @@ devJourneyAPI.interceptors.response.use(
       try {
         // Attempt to refresh the token
         const { data } = await axios.post(
-          "http://localhost:3000/api/v1/auth/refresh-token",
+          "https://api.devjourney.sahilkhandekar.dev/api/v1/auth/refresh-token",
           {},
           { withCredentials: true },
         )
