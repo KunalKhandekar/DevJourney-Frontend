@@ -254,11 +254,11 @@ export const SignupForm = ({
 
           <figure className='bg-muted relative hidden md:block'>
             <img
-              src=''
+              src='./banner1.png'
               alt='Signup Banner'
-              width={400}
+              width={100}
               height={400}
-              className='absolute inset-0 w-full h-full object-cover '
+              className='w-full h-full object-cover'
             />
           </figure>
         </CardContent>

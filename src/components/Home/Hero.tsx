@@ -18,6 +18,9 @@ import { Button } from '@/components/ui/button';
  * Types
  */
 import type { Variants } from 'motion/react';
+import { useState } from 'react';
+import { useFetcher } from 'react-router';
+import { Loader2Icon } from 'lucide-react';
 
 /**
  * Constants
@@ -57,6 +60,21 @@ export const Hero = ({
   className,
   ...props
 }: React.ComponentProps<'section'>) => {
+  const fetcher = useFetcher();
+  const isLoading =
+    fetcher.state === 'submitting' && fetcher.formAction === '/subscribe';
+
+  const [email, setEmail] = useState<string>('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    fetcher.submit(
+      { email },
+      { method: 'post', action: '/subscribe', encType: 'application/json' },
+    );
+    setEmail('');
+  };
+
   return (
     <section
       className={cn('section', className)}
@@ -82,19 +100,29 @@ export const Hero = ({
           {HERO.text}
         </motion.p>
 
-        <motion.div
-          className='max-w-md mx-auto flex items-center gap-2'
-          variants={childVariant}
-        >
-          <Input
-            type='email'
-            name='email'
-            placeholder='Enter your email'
-            autoComplete='email'
-            aria-label='Enter your email'
-          />
+        <motion.div variants={childVariant}>
+          <form
+            className='max-w-md mx-auto flex items-center gap-2'
+            onSubmit={handleSubmit}
+          >
+            <Input
+              type='email'
+              name='email'
+              placeholder='Enter your email'
+              autoComplete='email'
+              aria-label='Enter your email'
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <Button>Subscribe</Button>
+            <Button
+              disabled={isLoading}
+              type='submit'
+            >
+              {isLoading && <Loader2Icon className='animate-spin' />}
+              {isLoading ? 'Subscribing...' : 'Subscribe'}
+            </Button>
+          </form>
         </motion.div>
       </motion.div>
     </section>

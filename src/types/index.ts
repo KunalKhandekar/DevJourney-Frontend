@@ -39,10 +39,8 @@ export interface Blog {
 export interface Comment {
   _id: string;
   content: string;
-  likesCount: number;
-  user: User | null;
-  blog: Blog;
-  replies: Comment[];
+  userId: { _id: string; username: string } | null;
+  blogId: { _id: string; title: string; slug: string, banner: Blog['banner'] };
   createdAt: string;
   updatedAt: string;
 }

@@ -39,17 +39,23 @@ const dashboardLoader: LoaderFunction = async () => {
       params: { limit: 5 },
     });
 
-    const paginatedBlogs = blogsResponse.data as PaginatedResponse<Blog, 'blogs'>;
-    const paginatedCommnets = commentsResponse.data as PaginatedResponse<Comment, 'comments'>;
-    const paginatedUsers = usersResponse.data as PaginatedResponse<User, 'users'>;
+    const paginatedBlogs = blogsResponse.data as PaginatedResponse<
+      Blog,
+      'blogs'
+    >;
+    const paginatedCommnets = commentsResponse.data;
+    const paginatedUsers = usersResponse.data as PaginatedResponse<
+      User,
+      'users'
+    >;
 
     return {
-        blogsCount: paginatedBlogs.total,
-        commentsCount: paginatedCommnets.total,
-        usersCount: paginatedUsers.total,
-        blogs: paginatedBlogs.blogs,
-        comments: paginatedCommnets.comments,
-        users: paginatedUsers.users,
+      blogsCount: paginatedBlogs.total,
+      commentsCount: paginatedCommnets.total,
+      usersCount: paginatedUsers.total,
+      blogs: paginatedBlogs.blogs,
+      comments: paginatedCommnets.comments,
+      users: paginatedUsers.users,
     } as DashboardData;
   } catch (error) {
     if (error instanceof AxiosError) {

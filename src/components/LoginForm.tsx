@@ -210,7 +210,7 @@ export const LoginForm = ({
 
           <figure className='bg-muted relative hidden md:block'>
             <img
-              src=''
+               src='./banner1.png'
               alt='Login Banner'
               width={400}
               height={400}

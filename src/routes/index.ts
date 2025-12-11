@@ -31,6 +31,7 @@ import blogsAction from '@/routes/actions/admin/blogsAction';
 import allUserAction from '@/routes/actions/admin/user';
 import blogCreateAction from '@/routes/actions/admin/blogCreate';
 import commentsAction from '@/routes/actions/comments';
+import subscribeAction from '@/routes/actions/subscribe';
 
 /**
  * Loaders
@@ -141,6 +142,10 @@ const router = createBrowserRouter([
   {
     path: '/comments',
     action: commentsAction,
+  },
+  {
+    path: '/subscribe',
+    action: subscribeAction,
   }
 ]);
 

@@ -53,18 +53,13 @@ export const Comments = () => {
       <h2 className='text-2xl font-semibold'>Comments</h2>
       <div>
         {allComments.map(
-          (
-            { _id, content, likesCount, user, createdAt, blog },
-            index,
-            array,
-          ) => (
+          ({ _id, content, userId, blogId, createdAt }, index, array) => (
             <Fragment key={_id}>
               <CommentCard
-                blog={blog}
+                blog={blogId}
                 content={content}
                 createdAt={createdAt}
-                likesCount={likesCount}
-                user={user!}
+                user={userId}
               />
 
               {index < array.length - 1 && <Separator className='my-1' />}

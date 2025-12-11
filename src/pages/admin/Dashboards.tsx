@@ -1,23 +1,23 @@
 /**
  * Node modules
  */
-import { useLoaderData, Link } from 'react-router';
 import { Fragment } from 'react';
+import { Link, useLoaderData } from 'react-router';
 
 /**
  * Components
  */
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardAction,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { BlogTable, columns } from '@/components/BlogTable';
 import { CommentCard } from '@/components/CommentCard';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { UserCard } from '@/components/UserCard';
 
 /**
@@ -28,7 +28,7 @@ import useUser from '@/hooks/useUser';
 /**
  * Assets
  */
-import { TextIcon, MessageSquareIcon, UserRoundIcon, User } from 'lucide-react';
+import { MessageSquareIcon, TextIcon, UserRoundIcon } from 'lucide-react';
 
 /**
  * Types
@@ -134,18 +134,13 @@ export const Dashboard = () => {
 
           <CardContent className='px-4'>
             {loaderData.comments.map(
-              (
-                { _id, content, likesCount, user, blog, createdAt },
-                index,
-                array,
-              ) => (
+              ({ _id, content, userId, blogId, createdAt }, index, array) => (
                 <Fragment key={_id}>
                   <CommentCard
-                    blog={blog}
+                    blog={blogId}
                     content={content}
                     createdAt={createdAt}
-                    likesCount={likesCount}
-                    user={user!}
+                    user={userId}
                   />
 
                   {index < array.length - 1 && <Separator className='my-1' />}
@@ -176,27 +171,31 @@ export const Dashboard = () => {
 
           <CardContent className='px-4 space-y-2'>
             {loaderData.users.map(
-              (
-                { _id, username, email, role,firstName, lastName, createdAt },
-              ) => (
-                  <UserCard
-                    createdAt={createdAt}
-                    email={email}
-                    role={role}
-                    userId={_id}
-                    username={username}
-                    firstName={firstName}
-                    key={_id}
-                    lastName={lastName}
-                    loggedInUser={loggedInUser}
-                  />
+              ({
+                _id,
+                username,
+                email,
+                role,
+                firstName,
+                lastName,
+                createdAt,
+              }) => (
+                <UserCard
+                  createdAt={createdAt}
+                  email={email}
+                  role={role}
+                  userId={_id}
+                  username={username}
+                  firstName={firstName}
+                  key={_id}
+                  lastName={lastName}
+                  loggedInUser={loggedInUser}
+                />
               ),
             )}
           </CardContent>
         </Card>
       </div>
-
-
     </div>
   );
 };
