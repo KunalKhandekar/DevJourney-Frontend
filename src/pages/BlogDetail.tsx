@@ -50,6 +50,7 @@ import {
 import type { Blog } from '@/types';
 import type { DropdownMenuArrowProps } from '@radix-ui/react-dropdown-menu';
 import { Input } from '@/components/ui/input';
+import { devJourneyAPI } from '@/api';
 
 type IComment = {
   content: string;
@@ -126,16 +127,54 @@ export const BlogDetail = () => {
     fetcher.state === 'submitting' && fetcher.formMethod === 'POST';
 
   const navigate = useNavigate();
-  const { blog, comments } = useLoaderData() as {
+  const { blog, comments, isLiked } = useLoaderData() as {
     blog: Blog;
     comments: IComment[];
+    isLiked: boolean;
   };
+  const [likesCount, setLikesCount] = useState(blog.likesCount);
+  const [userLiked, setUserLiked] = useState(isLiked || false);
+
   const editor = useEditor({
     extensions: [StarterKit],
     content: blog.content,
     editable: false,
     autofocus: false,
   });
+
+  const handleLike = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        toast.error('Login to like the blog');
+        return;
+      }
+      const res = await devJourneyAPI.post(`/likes/blog/${blog._id}`);
+      const data = await res.data;
+      setLikesCount(data.likesCount);
+      setUserLiked(data.userLiked);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update like');
+    }
+  };
+
+  const handleUnlike = async () => {
+    try {
+      const accessToken = localStorage.getItem('accessToken');
+      if (!accessToken) {
+        toast.error('Login to unlike the blog');
+        return;
+      }
+      const res = await devJourneyAPI.delete(`/likes/blog/${blog._id}`);
+      const data = await res.data;
+      setLikesCount(data.likesCount);
+      setUserLiked(false);
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to update unlike');
+    }
+  };
 
   const onSubmit = useCallback(
     async (e: any) => {
@@ -167,7 +206,7 @@ export const BlogDetail = () => {
         <h1 className='text-2xl md:text-4xl leading-tight font-semibold -mt-10'>
           {blog.title}
         </h1>
-        <div className='flex items-center gap-3 my-8'>
+        <div className='flex sm:items-center gap-3 my-8 flex-col sm:flex-row items-start justify-between'>
           <div className='flex items-center gap-3'>
             <Avatar
               name={blog.author.username}
@@ -177,28 +216,34 @@ export const BlogDetail = () => {
             <span>{getUsername(blog.author)}</span>
           </div>
 
-          <Separator
-            orientation='vertical'
-            className='data-[orientation=vertical]:h-1 data-[orientation=vertical]:w-1 rounded-full'
-          />
-
-          <div className='text-muted-foreground'>
-            {getReadingTime(editor.getText() || '')} min read
-          </div>
-          <div className='text-muted-foreground'>
-            {new Date(blog.publishedAt).toLocaleDateString('en-US', {
-              dateStyle: 'medium',
-            })}
+          <div className='flex items-center gap-3'>
+            <div className='text-muted-foreground flex items-start gap-1'>
+              {getReadingTime(editor.getText() || '')} min read
+            </div>
+            <div className='text-muted-foreground'>
+              {new Date(blog.publishedAt).toLocaleDateString('en-US', {
+                dateStyle: 'medium',
+              })}
+            </div>
           </div>
         </div>
 
         <Separator />
 
         <div className='flex items-center gap-2 my-2'>
-          <Button variant='ghost'>
-            <ThumbsUpIcon />
-            {blog.likesCount}
+          <Button
+            variant='ghost'
+            onClick={userLiked ? handleUnlike : handleLike}
+            className='flex items-center gap-1'
+          >
+            <ThumbsUpIcon
+              className={userLiked ? 'text-white' : ''}
+              strokeWidth={userLiked ? 0 : 2}
+              fill={userLiked ? 'currentColor' : 'none'}
+            />
+            {likesCount}
           </Button>
+
           <Button
             variant='ghost'
             onClick={() => {
@@ -240,12 +285,13 @@ export const BlogDetail = () => {
 
         <EditorContent editor={editor} />
 
-        <Separator className='mt-8' id='comments-section' />
+        <Separator
+          className='mt-8'
+          id='comments-section'
+        />
 
         <section className='mt-18'>
-          <h3
-            className='text-xl font-semibold pb-4'
-          >
+          <h3 className='text-xl font-semibold pb-4'>
             Comments ({comments.length})
           </h3>
 
