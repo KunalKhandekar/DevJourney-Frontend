@@ -1,73 +1,93 @@
-# React + TypeScript + Vite
+# DevJourney
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+DevJourney is a full featured blogging platform where I share and publish my development journey and technical content. The project is built with a scalable MERN architecture and includes secure authentication, blog creation tools, interactions, and an admin system for managing platform data.
 
-Currently, two official plugins are available:
+## Live URLs
+**Frontend**  
+https://devjourney.sahilkhandekar.dev/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Backend API**  
+https://api.devjourney.sahilkhandekar.dev/api/v1
 
-## React Compiler
+## Screenshots  
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/95fbd7e5-427b-4498-9666-354b07e8c7ad" alt="Home" width="45%" />
+  <img src="https://github.com/user-attachments/assets/278c9bc2-f2d9-4f8f-9d35-30474029a528" alt="Blog" width="45%" />
+  <img src="https://github.com/user-attachments/assets/33f8be6f-114f-4954-becf-322e872de10b" alt="Dashboard" width="45%" />
+  <img src="https://github.com/user-attachments/assets/eba302a3-0e63-416d-a99a-678cc10d0d89" alt="Write a blog" width="45%" />
+  <img src="https://github.com/user-attachments/assets/1fe8fe0b-8106-46ea-b0dd-43e8949fe7ba"  alt="Preview blog" width="45%" />
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+</p>
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Frontend
+- React with Vite  
+- TypeScript  
+- TailwindCSS  
+- Tiptap rich text editor  
+- React Router  
+- Cloudinary upload integration  
+- Resend integration for notifications  
+- Error Boundaries
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Backend
+- Node.js 
+- Express  
+- MongoDB with Mongoose  
+- Authentication with Access and Refresh tokens  
+- Strong validation and sanitization  
+- Winston and Logtail for structured logging  
+- Cloudinary image upload  
+- Resend for email services  
+- REST API with versioning  
+- Admin level user and blog operations  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- User registration and login with secure token handling  
+- Refresh token rotation for seamless sessions  
+- Blog creation with image upload to Cloudinary  
+- Blog editing and deletion  
+- Rich text editor powered by Tiptap  
+- Like and unlike system for blogs  
+- Commenting system
+- Slug based blog retrieva
+- Dashboard with statistics and recent activity
+- Admin capabilities for managing users, blogs, comments, and related data  
+- Subscription system with email notifications  
+- Structured logging and monitoring  
+- Error boundaries for frontend stability  
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+This project uses two separate repositories for better maintainability.
+
+### Frontend Repository
+Contains all UI components, pages, dashboard, authentication handlers, blog CRUD pages, and integration logic.
+
+### Backend Repository
+Contains all API routes, controllers, models, middleware, authentication logic, validations, loggers, and upload handlers.
+
+## API Overview
+
+- Authentication  
+- User management  
+- Blog CRUD  
+- Like and unlike endpoints  
+- Comment management  
+- Dashboard statistics retrieval  
+- Subscription endpoints  
+
+## Deployment
+
+- Frontend deployed with CloudFront and S3  
+- Backend deployed on a secure server with reverse proxy and SSL  
+- Image hosting handled by Cloudinary  
+- Email services powered by Resend  
+
+## Contact
+
+If you want to connect or collaborate, you can reach out through:  
+**https://sahilkhandekar.dev**
